@@ -1,0 +1,18 @@
+
+/* Flex Container */
+.containerDoadores {
+	max-width: 900px;
+	margin: 0 auto;
+	display: flex;
+	/*border: 1px solid #ccc;*/
+  flex-wrap: wrap;
+  /*Está opção */
+  justify-content: space-around;
+}
+.containerDoador{
+  margin: 15px;
+  border: 2px solid gray;
+  border-radius: 5px;
+  padding: 10px;
+}
+  
