@@ -1,0 +1,113 @@
+<html>
+<head>
+<meta charset="UTF-8"> 
+ <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" 
+  integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">   
+ <!-- funcionando -->
+    <!-- <script src="https://cdn.jsdelivr.net/npm/vue"></script> -->
+  <!-- esse ok -->
+  <script src="https://cdn.jsdelivr.net/npm/vue"></script>  
+  <!--testar esse no codepen -->  
+ <!-- <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script> 
+-->
+<!-- não  <script src="https://unpkg.com/vue"></script>
+ --> 
+<!-- não funciono  <script src="https://unpkg.com/browse/vue@2.6.10/"></script>
+-->
+   <!--	
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script> -->
+<!--  
+<script type="module">
+  import Vue from 'https://cdn.jsdelivr.net/npm/vue@2.6.10/dist/vue.esm.browser.js'
+</script>
+-->
+ <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+  
+   <script       src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js">  </script>
+ <script src="https://cdnjs.cloudflare.com/ajax/libs/accounting.js/0.4.1/accounting.min.js"></script>
+  <!-- <script src="https://unpkg.com/moment" ></script> -->
+</head>
+<body>
+
+  
+<div id="app1" class="container" style="margin-top: 15px;">
+    <div class="alert alert-info">
+      0
+    </div>
+    <fetch-data url="https://covidcampanha2020api.rj.r.appspot.com/doadoresbuscar">
+        <div slot="loading">Carregando doadores</div>
+        <div slot-scope="{ response: repos }" class="columns is-mobile">
+            <div class="column is-half is-offset-one-quarter">
+              <!-- <article class="media" v-for="doador in repos.slice(0,2)"> .slice(0,8) -->
+              <div class="containerDoadores"> 
+                <article class="media" v-for="doador in repos.slice(0,6)" :key="doador.id">
+                    <div class="media-content">
+                        <div class="content">
+                            <p class="containerDoador">
+                             <!--       <strong>Nome:</strong> {{ doador.nome }} <strong>Valor:</strong> {{ doador.valor }} <strong>Data:</strong> {{  moment(doador.created_at).format("DD-MM-YYYY  hh:mm") }} -->
+                             <strong>Nome:</strong> {{ doador.nome }} <strong>Valor:</strong> {{ accounting.formatMoney(doador.valor, "R$ ", 2, ".", ",") }} <strong>Data:</strong> {{  moment(doador.created_at).format("DD-MM-YYYY") }}
+                              
+                            </p>
+                        </div>
+                    </div>
+                </article>
+              </div>
+            </div>
+        </div>
+    </fetch-data>
+</div>
+   
+<script>
+Vue.component('fetch-data', {
+  props: ['url'],
+  data() {
+     
+    return {
+      loaded: false,
+      response: null,
+    }
+  },
+  async mounted() {
+    await axios.get(this.url)
+       .then((response) => {
+        this.response = response
+        this.loaded = true
+      })
+    
+  },
+  /*
+  computed:{
+    fullName() {
+      const valor = 10;
+      return valor;
+    }
+  },*/ 
+  
+  render() {
+    if (!this.loaded) {
+      return this.$slots.loading[0]
+    }
+
+    return this.$scopedSlots.default({
+      response: this.response.data,
+    })
+  },
+
+});
+/*
+
+Vue.filter('formatDate', function(value) {
+  if (value) {
+    return moment(String(value)).format('DD/MM/YYYY hh:mm')
+  }
+});
+
+*/
+new Vue({
+    el: '#app1'
+})
+  
+
+ </script>   
+  </body>
+</html>
